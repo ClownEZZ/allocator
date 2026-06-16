@@ -15,12 +15,16 @@ arena_t *arena_create(size_t size)
     arena->data = malloc(size);
     arena->offset = 0;
     arena->size = size;
+    arena->next = NULL;
+    return arena;
   }
 
-  return arena;
+  return NULL;
 }
 
 void arena_term(arena_t *arena) {
+  if (arena->next != NULL)
+    arena_term(arena->next);
   free(arena->data);
   free(arena);
 }
@@ -29,15 +33,27 @@ void *arena_alloc(arena_t *arena, size_t size)
 {
 #define ALIGNMENT 8
   size_t tmp;
+
+  if (arena == NULL || size == 0)
+    return NULL;
+
   tmp = (arena->offset + ALIGNMENT - 1) & ~(ALIGNMENT - 1);
-  if (tmp + size <= arena->size && size != 0) {
+  if (tmp + size <= arena->size) {
     arena->offset = tmp + size;
     return (char*) arena->data + tmp;
   }
+  else {
+    if (arena->next == NULL)
+      arena->next = arena_create(size + 1000);
+    return arena_alloc(arena->next, size);
+  }
+
   return NULL;
 #undef ALIGNMENT
 }
 
 void arena_reset(arena_t *arena) {
+  if (arena->next != NULL)
+    arena_reset(arena->next);
   arena->offset = 0;
 }
