@@ -35,13 +35,12 @@ void arena_term(arena_t *arena) {
 
 void *arena_alloc(arena_t *arena, size_t size)
 {
-#define ALIGNMENT 8
   size_t tmp;
 
   if (arena == NULL || size == 0)
     return NULL;
 
-  tmp = (arena->offset + ALIGNMENT - 1) & ~(ALIGNMENT - 1);
+  tmp = ALIGN(arena->offset);
   if (tmp + size <= arena->size) {
     arena->offset = tmp + size;
     return (char*) arena->data + tmp;
@@ -53,7 +52,6 @@ void *arena_alloc(arena_t *arena, size_t size)
   }
 
   return NULL;
-#undef ALIGNMENT
 }
 
 void arena_reset(arena_t *arena) {
