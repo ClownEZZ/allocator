@@ -13,6 +13,10 @@ arena_t *arena_create(size_t size)
   arena = (arena_t *) malloc(sizeof(arena_t));
   if (arena != NULL && size != 0) {
     arena->data = malloc(size);
+    if (arena->data == NULL) {
+      free(arena);
+      return NULL;
+    }
     arena->offset = 0;
     arena->size = size;
     arena->next = NULL;
