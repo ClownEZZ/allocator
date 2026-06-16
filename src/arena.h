@@ -7,7 +7,7 @@
 #define __ARENA_H__
 
 #define ALIGMENT sizeof(void *)
-#define ALIGN(x) (x) + ALIGMENT - 1 & ~(ALIGMENT - 1)
+#define ALIGN(x) ((x) + ALIGMENT - 1) & ~(ALIGMENT - 1)
 
 typedef struct arena_t {
   void *data;
