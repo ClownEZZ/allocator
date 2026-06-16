@@ -26,9 +26,11 @@ arena_t *arena_create(size_t size)
   return NULL;
 }
 
-void arena_term(arena_t *arena) {
-  if (arena->next != NULL)
-    arena_term(arena->next);
+void arena_term(arena_t *arena)
+{
+  if (arena == NULL)
+    return;
+  arena_term(arena->next);
   free(arena->data);
   free(arena);
 }
@@ -54,8 +56,10 @@ void *arena_alloc(arena_t *arena, size_t size)
   return NULL;
 }
 
-void arena_reset(arena_t *arena) {
-  if (arena->next != NULL)
-    arena_reset(arena->next);
+void arena_reset(arena_t *arena)
+{
+  if (arena == NULL)
+    return;
+  arena_reset(arena->next);
   arena->offset = 0;
 }
