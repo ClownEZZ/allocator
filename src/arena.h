@@ -6,6 +6,8 @@
 #ifndef __ARENA_H__
 #define __ARENA_H__
 
+#include <stddef.h>
+
 #define ALIGMENT sizeof(void *)
 #define ALIGN(x) ((x) + ALIGMENT - 1) & ~(ALIGMENT - 1)
 
